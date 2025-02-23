@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text-to-SQL Converter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        label {
+            font-size: 16px;
+            font-weight: bold;
+            color: #555;
+        }
+        input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .result-container {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 16px;
+            color: #333;
+            min-height: 50px;
+            margin-top: 15px;
+            word-wrap: break-word;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Text-to-SQL Converter</h1>
+        <form id="queryForm">
+            <label for="query">Enter your question:</label><br>
+            <input type="text" id="query" name="query" required>
+            <button type="submit">Convert to SQL</button>
+        </form>
+        <h2 style="color: #333;">Generated SQL Query:</h2>
+        <div id="sql_result" class="result-container"></div>
+    </div>
+    <script>
+        document.getElementById("queryForm").onsubmit = async function(e) {
+            e.preventDefault();
+            let query = document.getElementById("query").value;
+            
+            let response = await fetch("/", {
+                method: "POST",
+                body: new URLSearchParams({ query }),
+                headers: { "Content-Type": "application/x-www-form-urlencoded" }
+            });
+            
+            let result = await response.json();
+            document.getElementById("sql_result").innerText = result.sql_query || "Error: No SQL query generated.";
+        };
+    </script>
+</body>
+</html>
